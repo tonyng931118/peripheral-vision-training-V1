@@ -10,8 +10,14 @@
             var currNum = 1;
             var fontRatio = Math.floor(window.innerWidth/1920*1000)/1000;
             fontRatio = fontRatio >= 1 ? 1: fontRatio;
-            var maxFontSize = 70 * fontRatio;
+            fontRatio = fontRatio < 0.4 ? 0.4 : fontRatio;
+            var maxFontSize = 60 * fontRatio;
+            maxFontSize = (window.innerWidth > 800) ? maxFontSize + 10 : maxFontSize + 5;
             var minFontSize = 50 * fontRatio;
+            minFontSize = (window.innerWidth > 800) ? ((minFontSize - 10) < 10 ? 10 : (minFontSize - 10)) : minFontSize;
+            var widthOffset = (window.innerWidth < 800) ? 70 : 100;
+            var widthPrexRatio = (window.innerWidth < 800) ? 0.05 : 0.2;
+            var heightPrexRatio = (window.innerHeight < 600) ? 0.15 : 0.2;
 
             function getRandomInt(min, max) {
                 return Math.floor(Math.random() * (max - min) + min);
@@ -82,8 +88,8 @@
             $(document).ready(function() {
                 var windowHeight = window.innerHeight;
                 var windowWidth = window.innerWidth;
-                var widthPrex = windowWidth*0.2;
-                var heightPrex = windowHeight*0.3;
+                var widthPrex = windowWidth * widthPrexRatio;
+                var heightPrex = windowHeight * heightPrexRatio;
 
                 for (var i = 1; i <= 20; i++) {
                     var numElm = $("<span class='number clickable'>"+i+"</span>");
@@ -92,11 +98,11 @@
                     if (getRandomInt(0, 2) == 0) {
                         //left
                         var top = getRandomInt(heightPrex, (windowHeight - heightPrex));
-                        var left = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                        var left = getRandomInt(widthPrex, ((windowWidth/2)-widthOffset));
                         
                         while (!checkAcceptPosition(true, left, top) && loopCounter < 10) {
                             top = getRandomInt(heightPrex, (windowHeight - heightPrex));
-                            left = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                            left = getRandomInt(widthPrex, ((windowWidth/2)-widthOffset));
                             loopCounter++;
                         }
 
@@ -111,11 +117,11 @@
                     } else {
                         //right
                         var top = getRandomInt(heightPrex, (windowHeight - heightPrex));
-                        var right = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                        var right = getRandomInt(widthPrex, ((windowWidth/2)-widthOffset));
 
                         while (!checkAcceptPosition(false, right, top) && loopCounter < 10) {
                             top = getRandomInt(heightPrex, (windowHeight - heightPrex));
-                            right = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                            right = getRandomInt(widthPrex, ((windowWidth/2)-widthOffset));
                             loopCounter++;
                         }
 
@@ -156,6 +162,12 @@
                 right: 50%;
                 left: 50%;
                 bottom: 50%;
+                cursor: pointer;
+                text-align: center;
+                line-height: 50px;
+                font-family: monospace;
+                color: white;
+                font-weight: bold;
             }
             .reload-btn {
                 width: 100px;
@@ -168,7 +180,7 @@
                 font-weight: bold;
                 font-family: monospace;
                 position: absolute;
-                background-color: #e0f3ff;
+                /* background-color: #e0f3ff; */
                 padding: 10px;
             }
             .clickable {
@@ -181,7 +193,7 @@
                 color: #fc3b3b;
             }
 
-            @media only screen and (max-width: 600px) {
+            @media only screen and (max-width: 800px) {
                 .number {
                     padding: 1%;
                 }
@@ -189,7 +201,6 @@
         </style>
     </head>
     <body>
-        <span class="dot"></span>
-        <button type="button" class="reload-btn" onclick="location.reload();">Reload</button>
+        <span class="dot" onclick="location.reload();">Reload</span>
     </body>
 </html>
