@@ -1,5 +1,7 @@
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <script src="js/jquery-3.3.1.js"></script>
         <script>
 
@@ -167,7 +169,7 @@
                 font-family: monospace;
                 position: absolute;
                 background-color: #e0f3ff;
-                padding: 1%;
+                width: 10px;
             }
             .clickable {
                 cursor: pointer;
@@ -177,6 +179,12 @@
             }
             .wrong {
                 color: #fc3b3b;
+            }
+
+            @media only screen and (max-width: 600px) {
+                .number {
+                    width: 1%;
+                }
             }
         </style>
     </head>
