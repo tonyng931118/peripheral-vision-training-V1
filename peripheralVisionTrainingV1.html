@@ -1,0 +1,186 @@
+<html>
+    <head>
+        <script src="js/jquery-3.3.1.js"></script>
+        <script>
+
+            var leftPosHistory = [];
+            var rightPosHistory = [];
+            var currNum = 1;
+            var fontRatio = Math.floor(window.innerWidth/1920*1000)/1000;
+            fontRatio = fontRatio >= 1 ? 1: fontRatio;
+            var maxFontSize = 70 * fontRatio;
+            var minFontSize = 50 * fontRatio;
+
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min) + min);
+            }
+
+            function checkAcceptPosition(left, x, y) {
+                if (left) {
+                    //left
+                    if (leftPosHistory.length == 0) {
+                        leftPosHistory.push({
+                            "y": y,
+                            "x": x
+                        });
+                        return true;
+                    } else {
+                        var overlapFlag = false;
+                        for (var i = 0; i < leftPosHistory.length; i++) {
+                            var pos = leftPosHistory[i];
+                            if (
+                                ((pos.x-maxFontSize) <= x && x <= (pos.x+maxFontSize))
+                                &&
+                                ((pos.y-maxFontSize) <= y && y <= (pos.y+maxFontSize))
+                            ) {
+                                overlapFlag = true;
+                                return false;
+                            }
+                        }
+                        if (!overlapFlag) {
+                            leftPosHistory.push({
+                                "y": y,
+                                "x": x
+                            });
+                            return true;
+                        }
+                    }
+                } else {
+                    //right
+                    if (rightPosHistory.length == 0) {
+                        rightPosHistory.push({
+                            "y": y,
+                            "x": x
+                        });
+                        return true;
+                    } else {
+                        var overlapFlag = false;
+                        for (var i = 0; i < rightPosHistory.length; i++) {
+                            var pos = rightPosHistory[i];
+                            if (
+                                ((pos.x-maxFontSize) <= x && x <= (pos.x+maxFontSize))
+                                &&
+                                ((pos.y-maxFontSize) <= y && y <= (pos.y+maxFontSize))
+                            ) {
+                                overlapFlag = true;
+                                return false;
+                            }
+                        }
+                        if (!overlapFlag) {
+                            rightPosHistory.push({
+                                "y": y,
+                                "x": x
+                            });
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            $(document).ready(function() {
+                var windowHeight = window.innerHeight;
+                var windowWidth = window.innerWidth;
+                var widthPrex = windowWidth*0.2;
+                var heightPrex = windowHeight*0.3;
+
+                for (var i = 1; i <= 20; i++) {
+                    var numElm = $("<span class='number clickable'>"+i+"</span>");
+                    var loopCounter = 0;
+                    
+                    if (getRandomInt(0, 2) == 0) {
+                        //left
+                        var top = getRandomInt(heightPrex, (windowHeight - heightPrex));
+                        var left = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                        
+                        while (!checkAcceptPosition(true, left, top) && loopCounter < 10) {
+                            top = getRandomInt(heightPrex, (windowHeight - heightPrex));
+                            left = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                            loopCounter++;
+                        }
+
+                        var fontSize = getRandomInt(minFontSize, maxFontSize) + "px";
+
+                        $(numElm).css({
+                            "top": top + "px",
+                            "left": left + "px",
+                            "font-size": fontSize
+                        });
+                        $("body").append(numElm);
+                    } else {
+                        //right
+                        var top = getRandomInt(heightPrex, (windowHeight - heightPrex));
+                        var right = getRandomInt(widthPrex, ((windowWidth/2)-100));
+
+                        while (!checkAcceptPosition(false, right, top) && loopCounter < 10) {
+                            top = getRandomInt(heightPrex, (windowHeight - heightPrex));
+                            right = getRandomInt(widthPrex, ((windowWidth/2)-100));
+                            loopCounter++;
+                        }
+
+                        var fontSize = getRandomInt(minFontSize, maxFontSize) + "px";
+
+                        $(numElm).css({
+                            "top": top + "px",
+                            "right": right + "px",
+                            "font-size": fontSize
+                        });
+                        $("body").append(numElm);
+                    }
+                }
+
+                $(document).on("click", "span.clickable", function() {
+                    var clickNum = $(this).text();
+                    if (clickNum == currNum) {
+                        $(this).addClass("correct");
+                        $(this).removeClass("clickable");
+                    } else {
+                        $("span.clickable").addClass("wrong");
+                        $("span.clickable").removeClass("clickable");
+                    }
+                    currNum++;
+                });
+
+            });
+        </script>
+        <style>
+            .dot {
+                height: 50px;
+                width: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: block;
+                position: absolute;
+                top: 50%;
+                right: 50%;
+                left: 50%;
+                bottom: 50%;
+            }
+            .reload-btn {
+                width: 100px;
+                position: absolute;
+                left: 50%;
+                right: 50%;
+                bottom: 5%;
+            }
+            .number {
+                font-weight: bold;
+                font-family: monospace;
+                position: absolute;
+                background-color: #e0f3ff;
+            }
+            .clickable {
+                cursor: pointer;
+            }
+            .correct {
+                color: #11be11;
+            }
+            .wrong {
+                color: #fc3b3b;
+            }
+        </style>
+    </head>
+    <body>
+        <span class="dot"></span>
+        <button type="button" class="reload-btn" onclick="location.reload();">Reload</button>
+    </body>
+</html>
